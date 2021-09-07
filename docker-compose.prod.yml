@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  entrypoint:
+    image: registry.ops.katiecordescodes.com/personalsite-externals-entrypoint
+    labels:
+      - "traefik.enable=false"
+
+  app:
+    image: registry.ops.katiecordescodes.com/personalsite-externals-app
+    labels:
+      - "traefik.enable=false"
+    build:
+      context: .
+      dockerfile: .docker/app.dockerfile
+      args:
+        PHPTYPE: fpm
+      target: prod
