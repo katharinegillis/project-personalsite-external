@@ -1,5 +1,5 @@
 <?php
-namespace App\Tests;
+namespace App\Tests\_support;
 
 /**
  * Inherited Methods
