@@ -7,3 +7,4 @@ modules:
     enabled:
         - Asserts
         - \App\Tests\Helper\Unit
+namespace: App\Tests\_support
