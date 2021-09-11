@@ -1,0 +1,63 @@
+name: Blue-Green Switch
+
+on:
+  workflow_dispatch:
+
+env:
+  DEPLOY_URL: katiecordescodes.com
+  REGISTRY_URL: https://registry.ops.katiecordescodes.com
+  APP_ENV: prod
+
+jobs:
+  switch:
+    runs-on: ubuntu-latest
+
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Discord switch start notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Starting blue-green switch for {{ EVENT_PAYLOAD.repository.full_name }} on branch ${{ github.ref }}"
+
+      - name: Switch the application
+        uses: appleboy/ssh-action@master
+        env:
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: DEPLOY_PATH
+          script: |
+            export DEPLOY_PATH=$DEPLOY_PATH
+            chmod +x $DEPLOY_PATH/switch.sh
+            cd $DEPLOY_PATH
+            $DEPLOY_PATH/switch.sh
+
+      - name: Discord switch success notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Blue-green switch successful for {{ EVENT_PAYLOAD.repository.full_name }} on branch ${{ github.ref }}"
+
+  discord:
+    needs: switch
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Get job conclusion
+        uses: technote-space/workflow-conclusion-action@v2
+
+      - name: Discord switch start notification
+        if: env.WORKFLOW_CONCLUSION == 'failure' # notify only if failure
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Blue-green switch FAILED for {{ EVENT_PAYLOAD.repository.full_name }} on branch ${{ github.ref }}"
