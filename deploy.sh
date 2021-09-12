@@ -8,13 +8,14 @@ else
     STAGING="blue"
 fi
 
-# Recreate the .env file
-rm .env
-touch .env
-{
-  echo TRAEFIK_NAME="personalsite-externals"
-  echo SITE_URL="${SITE_URL}"
-} >> .env
+UID=$(id -u)
+GID=$(id -g)
+
+sed -i "s/UID=1000/UID=$UID/g" .env
+sed -i "s/GID=1000/GID=$GID/g" .env
+sed -i "s/SITE_URL=externals.katiecordescodes.docker/SITE_URL=$SITE_URL/g" .env
+sed -i "s/APP_ENV=dev/APP_ENV=prod/g" .env
+sed -i "s/AAPP_SECRET=\$ecretf0rt3st/APP_SECRET=$APP_SECRET/g" .env
 
 # Update staging
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml -f "../docker-compose.$STAGING.yml" pull

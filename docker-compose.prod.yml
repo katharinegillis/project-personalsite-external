@@ -18,3 +18,5 @@ services:
       args:
         PHPTYPE: fpm
       target: prod
+    volumes:
+      - ./.env:/var/www/.env
