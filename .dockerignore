@@ -1,0 +1,6 @@
+.idea
+vendor
+docker-compose.override.yml
+docker-compose.tools.yml
+docker-compose.yml
+README.md

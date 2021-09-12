@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  entrypoint:
+    image: registry.ops.katiecordescodes.com/personalsite-externals-entrypoint
+    build:
+      context: .
+      dockerfile: .docker/entrypoint.dockerfile
+    user: "$UID:$GID"
+
+  app:
+    image: registry.ops.katiecordescodes.com/personalsite-externals-app
+    build:
+      context: .
+      dockerfile: .docker/app.dockerfile
+    user: "$UID:$GID"

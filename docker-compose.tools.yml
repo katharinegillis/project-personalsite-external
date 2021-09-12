@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: .docker/app.dockerfile
+      args:
+        PHPTYPE: cli
+      target: tool
+    volumes:
+      - ./:/var/www/
+      - "$HOME/.composer/:/home/www-data/.composer"
+    environment:
+      COMPOSER_HOME: /home/www-data/.composer
+    user: "$UID:$GID"
