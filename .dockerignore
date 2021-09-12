@@ -4,3 +4,5 @@ docker-compose.override.yml
 docker-compose.tools.yml
 docker-compose.yml
 README.md
+.env.local
+.env.test.local

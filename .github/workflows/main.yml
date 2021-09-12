@@ -89,6 +89,7 @@ jobs:
         env:
           SITE_URL: ${{ env.DEPLOY_URL }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          APP_SECRET: ${{ secrets.APP_SECRET }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
