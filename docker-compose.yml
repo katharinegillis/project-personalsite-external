@@ -6,7 +6,6 @@ services:
     build:
       context: .
       dockerfile: .docker/entrypoint.dockerfile
-    user: "$UID:$GID"
 
   app:
     image: registry.ops.katiecordescodes.com/personalsite-externals-app
