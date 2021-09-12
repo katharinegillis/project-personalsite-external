@@ -1,14 +1,11 @@
 actor: ApiTester
 modules:
   enabled:
-    - \App\Tests\Helper\Api
+    - \App\Tests\_support\Helper\Api
     - REST:
         url: /v1/
         depends: Symfony
     - Symfony:
         app_path: 'src'
         environment: 'test'
-    - Doctrine2:
-        depends: Symfony
-        cleanup: true
 namespace: App\Tests\_support
