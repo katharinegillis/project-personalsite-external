@@ -1,9 +1,6 @@
 # IDE project files
 .idea
 
-# Sensitive data files
-.env
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
