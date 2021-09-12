@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: .docker/entrypoint.dockerfile
+    networks:
+      - default
 
   app:
     image: registry.ops.katiecordescodes.com/personalsite-externals-app
@@ -13,3 +15,5 @@ services:
       context: .
       dockerfile: .docker/app.dockerfile
     user: "$UID:$GID"
+    networks:
+      - default
