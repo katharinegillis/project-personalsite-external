@@ -50,7 +50,7 @@ jobs:
           args: "Test run successful for {{ EVENT_PAYLOAD.repository.full_name }} on branch ${{ github.ref }}"
 
   discord:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     if: always()
     steps:
