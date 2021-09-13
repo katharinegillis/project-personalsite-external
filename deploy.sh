@@ -3,9 +3,9 @@
 # Determine which colour is staging
 if grep -q 'set \$backend green:8080;' ../.docker/ingress/conf.d/default.conf
 then
-    STAGING="green"
-else
     STAGING="blue"
+else
+    STAGING="green"
 fi
 
 UID=$(id -u)
