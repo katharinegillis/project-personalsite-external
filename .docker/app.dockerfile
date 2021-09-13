@@ -1,9 +1,12 @@
 ARG PHPTYPE=fpm
 FROM php:8.0-$PHPTYPE as php
 
+ARG UID=1000
+ARG GID=1000
+
 RUN mkdir -p /var/www && mkdir -p /home/www-data/.composer
 
-RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
+RUN usermod -u $UID www-data && groupmod -g $GID www-data
 RUN chown -R www-data:www-data /var/www && chown -R www-data:www-data /home/www-data
 
 WORKDIR /var/www
@@ -29,12 +32,16 @@ USER www-data
 
 FROM php as dev
 
+USER www-data
+
 COPY . /var/www
 
 
 
 
 FROM composer as composer
+
+USER www-data
 
 COPY composer.json composer.json
 COPY composer.lock composer.lock

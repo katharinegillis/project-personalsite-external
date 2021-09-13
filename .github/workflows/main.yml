@@ -32,6 +32,9 @@ jobs:
         continue-on-error: true
 
       - name: Build image(s)
+        env:
+          UID: ${{ secrets.UID }}
+          GID: ${{ secrets.GID }}
         run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
 
       - name: Log in to private registry for building
