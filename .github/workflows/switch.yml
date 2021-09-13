@@ -35,9 +35,10 @@ jobs:
           envs: DEPLOY_PATH
           script: |
             export DEPLOY_PATH=$DEPLOY_PATH
-            chmod +x $DEPLOY_PATH/switch.sh
             cd $DEPLOY_PATH
-            $DEPLOY_PATH/switch.sh
+            cd ..
+            chmod +x switch.sh
+            ./switch.sh
 
       - name: Discord switch success notification
         env:
