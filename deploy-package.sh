@@ -2,6 +2,7 @@
 
 tar -czf deploy.tar.gz \
   deploy.sh \
-  docker-compose.prod.yml \
   docker-compose.yml \
-  .env
+  docker-compose.prod.yml \
+  docker-compose.ssl.yml \
+  .env.dist

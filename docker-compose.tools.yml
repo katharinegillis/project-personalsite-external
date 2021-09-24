@@ -7,10 +7,12 @@ services:
       dockerfile: .docker/app.dockerfile
       args:
         PHPTYPE: cli
+        CONTAINER_UID: $CONTAINER_UID
+        CONTAINER_GID: $CONTAINER_GID
       target: tool
     volumes:
       - ./:/var/www/html/
       - "$HOME/.composer/:/home/www-data/.composer"
     environment:
       COMPOSER_HOME: /home/www-data/.composer
-    user: "$UID:$GID"
+    user: "$CONTAINER_UID:$CONTAINER_GID"

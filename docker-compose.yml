@@ -3,8 +3,8 @@ version: "3.7"
 # Required environment variables:
 # - TRAEFIK_IDENTIFIER
 # - SITE_URL
-# - UID
-# - GID
+# - CONTAINER_UID
+# - CONTAINER_GID
 
 services:
   entrypoint:
@@ -29,9 +29,9 @@ services:
       dockerfile: .docker/app.dockerfile
       args:
         PHPTYPE: fpm
-        UID: $UID
-        GID: $GID
-    user: "$UID:$GID"
+        CONTAINER_UID: $CONTAINER_UID
+        CONTAINER_GID: $CONTAINER_GID
+    user: "$CONTAINER_UID:$CONTAINER_GID"
     labels:
       - "traefik.enable=false"
     networks:

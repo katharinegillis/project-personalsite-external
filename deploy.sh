@@ -1,27 +1,16 @@
 #!/bin/bash
 
-# Determine which colour is staging
-if grep -q 'set \$backend green:8080;' ../.docker/ingress/conf.d/default.conf
-then
-    STAGING="blue"
-else
-    STAGING="green"
-fi
+# Recreate the .env file
+envsubst < .env.dist > .env
 
-UID=$(id -u)
-GID=$(id -g)
+PARENT_PWD=${PWD%/*}
+CURRENT_DIR=${PWD##*/}
 
-sed -i "s/UID=1000/UID=$UID/g" .env
-sed -i "s/GID=1000/GID=$GID/g" .env
-sed -i "s/SITE_URL=externals.katiecordescodes.docker/SITE_URL=$SITE_URL/g" .env
-sed -i "s/APP_ENV=dev/APP_ENV=prod/g" .env
-sed -i "s/AAPP_SECRET=\$ecretf0rt3st/APP_SECRET=$APP_SECRET/g" .env
-{
-  echo ""
-  echo "COMPOSE_PROJECT_NAME=personalsite-externals-$STAGING"
-} >> .env
+echo "COMPOSE_PROJECT_NAME=${PARENT_PWD##*/}-${CURRENT_DIR}" >> .env
 
-# Update staging
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml -f "../docker-compose.$STAGING.yml" pull
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml -f "../docker-compose.$STAGING.yml" down
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml -f "../docker-compose.$STAGING.yml" up -d --remove-orphans
+# Update instance
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.ssl.yml pull
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.ssl.yml up -d --remove-orphans
+
+# Clean up old networks and images
+docker system prune -f

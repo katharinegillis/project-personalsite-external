@@ -1,12 +1,12 @@
 ARG PHPTYPE=fpm
 FROM php:8.0-$PHPTYPE as php
 
-ARG UID=1000
-ARG GID=1000
+ARG CONTAINER_UID=1000
+ARG CONTAINER_GID=1000
 
 RUN mkdir -p /var/www/html && mkdir -p /home/www-data/.composer
 
-RUN usermod -u $UID www-data && groupmod -g $GID www-data
+RUN usermod -u $CONTAINER_UID www-data && groupmod -g $CONTAINER_GID www-data
 RUN chown -R www-data:www-data /var/www/html && chown -R www-data:www-data /home/www-data
 
 WORKDIR /var/www/html
