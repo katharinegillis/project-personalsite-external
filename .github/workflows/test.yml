@@ -32,6 +32,9 @@ jobs:
       - name: Run tests
         run: php vendor/bin/codecept run --coverage-text
 
+      - name: Check code coverage
+        run: chmod u+x check-coverage.sh && bash check-coverage.sh
+
       - name: Discord test run end notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
