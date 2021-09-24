@@ -4,25 +4,10 @@ services:
   entrypoint:
     volumes:
       - ./.docker/templates/:/etc/nginx/templates/
-      - ./public/:/var/www/public/
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.personalsite-externals.rule=Host(`${SITE_URL}`)"
-      - "traefik.http.routers.personalsite-externals.entryPoints=web"
-      - "traefik.http.routers.personalsite-externals.service=personalsite-externals"
-      - "traefik.http.services.personalsite-externals.loadbalancer.server.port=8080"
-    networks:
-      - traefik
-      - default
+      - ./public/:/var/www/html/public/
 
   app:
     build:
       target: dev
-    labels:
-      - "traefik.enable=false"
     volumes:
-      - ./:/var/www/
-
-networks:
-  traefik:
-    external: true
+      - ./:/var/www/html/

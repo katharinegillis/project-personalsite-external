@@ -9,7 +9,7 @@ services:
         PHPTYPE: cli
       target: tool
     volumes:
-      - ./:/var/www/
+      - ./:/var/www/html/
       - "$HOME/.composer/:/home/www-data/.composer"
     environment:
       COMPOSER_HOME: /home/www-data/.composer

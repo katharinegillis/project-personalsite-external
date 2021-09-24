@@ -4,12 +4,12 @@ FROM php:8.0-$PHPTYPE as php
 ARG UID=1000
 ARG GID=1000
 
-RUN mkdir -p /var/www && mkdir -p /home/www-data/.composer
+RUN mkdir -p /var/www/html && mkdir -p /home/www-data/.composer
 
 RUN usermod -u $UID www-data && groupmod -g $GID www-data
-RUN chown -R www-data:www-data /var/www && chown -R www-data:www-data /home/www-data
+RUN chown -R www-data:www-data /var/www/html && chown -R www-data:www-data /home/www-data
 
-WORKDIR /var/www
+WORKDIR /var/www/html
 
 USER www-data
 
@@ -23,6 +23,10 @@ USER root
 RUN apt update && apt install -y git zlib1g-dev libzip-dev unzip \
     && docker-php-ext-install zip
 
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 USER www-data
@@ -34,14 +38,12 @@ FROM php as dev
 
 USER www-data
 
-COPY . /var/www
+COPY --chown=www-data:www-data . /var/www/html
 
 
 
 
 FROM composer as composer
-
-USER www-data
 
 COPY composer.json composer.json
 COPY composer.lock composer.lock
@@ -58,6 +60,8 @@ RUN composer dump-autoload
 
 FROM php as prod
 
-COPY --from=composer /app/vendor /var/www/vendor
+WORKDIR /var/www/html
 
-COPY . /var/www
+COPY --chown=www-data:www-data --from=composer /app/vendor /var/www/html/vendor
+
+COPY --chown=www-data:www-data . /var/www/html

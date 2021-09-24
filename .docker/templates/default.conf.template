@@ -1,6 +1,6 @@
 server {
     server_name _;
-    root /var/www/public;
+    root /var/www/html/public;
     listen 8080;
 
     location / {
