@@ -1,4 +1,4 @@
-name: Deploy to Staging
+name: Deploy to Production
 
 # Required secret variables
 # - DISCORD_WEBHOOK
