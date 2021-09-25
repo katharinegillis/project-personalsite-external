@@ -5,7 +5,7 @@ version: "3.7"
 # - SITE_URL
 
 services:
-  frontend:
+  entrypoint:
     labels:
       - "traefik.http.middlewares.${TRAEFIK_IDENTIFIER}-redirect-websecure.redirectscheme.scheme=https"
       - "traefik.http.routers.${TRAEFIK_IDENTIFIER}.middlewares=${TRAEFIK_IDENTIFIER}-redirect-websecure"
