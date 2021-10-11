@@ -19,5 +19,8 @@ docker-compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compos
 # Clear the cache
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.ssl.yml exec -T app php bin/console clear:cache
 
+# Update database
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.ssl.yml exec -T app php bin/console doctrine:migrations:migrate --no-interaction
+
 # Clean up old networks and images
 docker system prune -f
