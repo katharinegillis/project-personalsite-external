@@ -1,0 +1,10 @@
+actor: IntegrationTester
+modules:
+    enabled:
+        - \App\Tests\Helper\Integration
+        - Symfony:
+            app_path: 'src'
+            environment: 'test'
+        - Doctrine2:
+            cleanup: true
+            depends: Symfony
