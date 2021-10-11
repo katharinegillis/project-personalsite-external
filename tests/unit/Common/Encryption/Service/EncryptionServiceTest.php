@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace App\Tests\unit;
+namespace App\Tests\unit\Common\Encryption\Service;
 
-use App\Common\Encryption\EncryptionService;
+use App\Common\Encryption\Service\EncryptionService;
 use Codeception\Test\Unit;
 use Exception;
 

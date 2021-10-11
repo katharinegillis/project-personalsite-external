@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace App\Common\Encryption;
+namespace App\Common\Encryption\Service;
 
 use DateTime;
+use DateTimeZone;
 use Exception;
 
 class EncryptionService
@@ -45,11 +46,12 @@ class EncryptionService
      * @param string $secret
      * @param string|null $hmac
      * @return string
+     * @throws Exception
      */
     public function encryptWithTSValidation(string $message, string $method, string $secret, ?string &$hmac): string
     {
-        date_default_timezone_set('UTC');
-        $message = substr(date('c'),0,19) . "$message";
+        $now = new DateTime(timezone: new DateTimeZone('UTC'));
+        $message = substr($now->format('c'),0,19) . "$message";
         return $this->encrypt($message, $method, $secret, $hmac);
     }
 
