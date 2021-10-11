@@ -1,56 +1,89 @@
-name: Deploy to Staging
+name: Deploy to Production
+
+# Required secret variables
+# - DISCORD_WEBHOOK
+# - REGISTRY_URL
+# - REGISTRY_USERNAME
+# - REGISTRY_PASSWORD
+# - SSH_HOST
+# - SSH_USERNAME
+# - SSH_KEY
+# - DEPLOY_PATH
+# - DEPLOY_URL
+# - CONTAINER_UID
+# - CONTAINER_GID
+# - TRAEFIK_IDENTIFIER
+# - APP_ENV
+# - APP_SECRET
 
 on:
-  workflow_dispatch:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 env:
-  DEPLOY_URL: staging.externals.katiecordescodes.com
-  REGISTRY_URL: https://registry.ops.katiecordescodes.com
-  APP_ENV: prod
+  DOCKER_COMPOSE_FILES: -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.ssl.yml
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    environment: staging
+    environment: production
 
     steps:
-      - uses: actions/checkout@v2
-
       - name: Discord build start notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Starting build for {{ EVENT_PAYLOAD.repository.full_name }} on branch ${{ github.ref }}"
+          args: "Starting production build for {{ EVENT_PAYLOAD.repository.full_name }} on branch ${{ github.ref }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Fetch docker cache
         uses: satackey/action-docker-layer-caching@v0.0.11
         # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
 
-      - name: Build image(s)
+      - name: Set up .env for building
+        uses: danielr1996/envsubst-action@1.0.0
         env:
-          UID: ${{ secrets.UID }}
-          GID: ${{ secrets.GID }}
-        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+          SITE_URL: ${{ secrets.DEPLOY_URL }}
+          CONTAINER_UID: ${{ secrets.CONTAINER_UID }}
+          CONTAINER_GID: ${{ secrets.CONTAINER_GID }}
+          TRAEFIK_IDENTIFIER: ${{ secrets.TRAEFIK_IDENTIFIER }}
+        with:
+          input: .env.dist
+          output: .env
 
-      - name: Log in to private registry for building
+      - name: Build image(s)
+        run: docker-compose ${{ env.DOCKER_COMPOSE_FILES }} build
+
+      - name: Log in to private registry
         uses: docker/login-action@v1
         with:
-          registry: ${{ env.REGISTRY_URL }}
+          registry: ${{ secrets.REGISTRY_URL }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Push image(s)
-        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml push
+        run: docker-compose ${{ env.DOCKER_COMPOSE_FILES }} push
 
       - name: Create deploy package
         run: chmod +x deploy-package.sh && ./deploy-package.sh
 
-      - name: Deploy new docker-compose configs and .env setup script to production
+      - name: Ensure deploy path exists
+        uses: appleboy/ssh-action@master
+        env:
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: DEPLOY_PATH
+          script: mkdir -p $DEPLOY_PATH
+
+      - name: Upload the deploy package
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -76,7 +109,7 @@ jobs:
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
           REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-          REGISTRY_URL: ${{ env.REGISTRY_URL }}
+          REGISTRY_URL: ${{ secrets.REGISTRY_URL }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -90,25 +123,34 @@ jobs:
       - name: Deploy the application
         uses: appleboy/ssh-action@master
         env:
-          SITE_URL: ${{ env.DEPLOY_URL }}
+          SITE_URL: ${{ secrets.DEPLOY_URL }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          CONTAINER_UID: ${{ secrets.CONTAINER_UID }}
+          CONTAINER_GID: ${{ secrets.CONTAINER_GID }}
+          TRAEFIK_IDENTIFIER: ${{ secrets.TRAEFIK_IDENTIFIER }}
+          APP_ENV: ${{ secrets.APP_ENV }}
           APP_SECRET: ${{ secrets.APP_SECRET }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          envs: SITE_URL,DEPLOY_PATH
+          envs: SITE_URL,DEPLOY_PATH,CONTAINER_UID,CONTAINER_GID,TRAEFIK_IDENTIFIER,APP_ENV,APP_SECRET
           script: |
+            cd $DEPLOY_PATH
             export SITE_URL=$SITE_URL
             export DEPLOY_PATH=$DEPLOY_PATH
+            export CONTAINER_UID=$CONTAINER_UID
+            export CONTAINER_GID=$CONTAINER_GID
+            export TRAEFIK_IDENTIFIER=$TRAEFIK_IDENTIFIER
+            export APP_ENV=$APP_ENV
+            export APP_SECRET=$APP_SECRET
             chmod +x $DEPLOY_PATH/deploy.sh
-            cd $DEPLOY_PATH
             $DEPLOY_PATH/deploy.sh
 
       - name: Log out of the registry on the server
         uses: appleboy/ssh-action@master
         env:
-          REGISTRY_URL: ${{ env.REGISTRY_URL }}
+          REGISTRY_URL: ${{ secrets.REGISTRY_URL }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -123,7 +165,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Build successful for {{ EVENT_PAYLOAD.repository.full_name }} on branch ${{ github.ref }}"
+          args: "Production build successful for {{ EVENT_PAYLOAD.repository.full_name }} on branch ${{ github.ref }}"
 
   discord:
     needs: build
@@ -139,4 +181,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Build FAILED for {{ EVENT_PAYLOAD.repository.full_name }} on branch ${{ github.ref }}"
+          args: "Production build FAILED for {{ EVENT_PAYLOAD.repository.full_name }} on branch ${{ github.ref }}"
