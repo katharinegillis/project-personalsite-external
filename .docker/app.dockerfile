@@ -9,6 +9,9 @@ RUN mkdir -p /var/www/html && mkdir -p /home/www-data/.composer
 RUN usermod -u $CONTAINER_UID www-data && groupmod -g $CONTAINER_GID www-data
 RUN chown -R www-data:www-data /var/www/html && chown -R www-data:www-data /home/www-data
 
+RUN apt update && apt install -y git zlib1g-dev libzip-dev unzip \
+    && docker-php-ext-install zip pdo pdo_mysql
+
 WORKDIR /var/www/html
 
 USER www-data
@@ -20,12 +23,10 @@ FROM php as tool
 
 USER root
 
-RUN apt update && apt install -y git zlib1g-dev libzip-dev unzip \
-    && docker-php-ext-install zip
-
 RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug \
-    && echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    && docker-php-ext-enable xdebug
+
+COPY .docker/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
@@ -35,6 +36,13 @@ USER www-data
 
 
 FROM php as dev
+
+USER root
+
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
+
+COPY .docker/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 USER www-data
 

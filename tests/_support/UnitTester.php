@@ -1,5 +1,5 @@
-<?php
-namespace App\Tests\_support;
+<?php /** @noinspection ALL */
+namespace App\Tests;
 
 /**
  * Inherited Methods
@@ -12,7 +12,7 @@ namespace App\Tests\_support;
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
- * @method void pause()
+ * @method \Codeception\Lib\Friend haveFriend($name, $actorClass = NULL)
  *
  * @SuppressWarnings(PHPMD)
 */
@@ -20,7 +20,7 @@ class UnitTester extends \Codeception\Actor
 {
     use _generated\UnitTesterActions;
 
-    /**
-     * Define custom actions here
-     */
+   /**
+    * Define custom actions here
+    */
 }
