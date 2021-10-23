@@ -4,6 +4,11 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    api_secret: '%env(API_SECRET)%'
+    encryption_method: '%env(default:encryption_method_default:ENCRYPTION_METHOD)%'
+    encryption_method_default: 'AES-256-CBC'
+    encryption_secret: '%env(ENCRYPTION_SECRET)%'
+    encryption_timestamp_interval: '%env(int:ENCRYPTION_TIMESTAMP_INTERVAL)%'
 
 services:
     # default configuration for services in *this* file
@@ -28,6 +33,13 @@ services:
     # please note that last definitions always *replace* previous ones
     App\Common\ArrayCollection\ArrayCollectionFactoryInterface:
         class: App\Common\ArrayCollection\Doctrine2\Doctrine2ArrayCollectionFactory
+
+    App\Common\ApiSecret\Symfony\CheckApiSecretHeaderSubscriber:
+        arguments:
+            $apiSecret: '%api_secret%'
+            $encryptionMethod: '%encryption_method%'
+            $encryptionSecret: '%encryption_secret%'
+            $encryptionTimestampInterval: '%encryption_timestamp_interval%'
 
 when@test:
     services:

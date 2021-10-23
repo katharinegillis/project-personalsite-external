@@ -15,6 +15,9 @@ name: Deploy to Production
 # - TRAEFIK_IDENTIFIER
 # - APP_ENV
 # - APP_SECRET
+# - API_SECRET
+# - ENCRYPTION_SECRET
+# - ENCRYPTION_TIMESTAMP_INTERVAL
 
 on:
   push:
@@ -130,11 +133,14 @@ jobs:
           TRAEFIK_IDENTIFIER: ${{ secrets.TRAEFIK_IDENTIFIER }}
           APP_ENV: ${{ secrets.APP_ENV }}
           APP_SECRET: ${{ secrets.APP_SECRET }}
+          API_SECRET: ${{ secrets.API_SECRET }}
+          ENCRYPTION_SECRET: ${{ secrets.ENCRYPTION_SECRET }}
+          ENCRYPTION_TIMESTAMP_INTERVAL: ${{ secrets.ENCRYPTION_TIMESTAMP_INTERVAL }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          envs: SITE_URL,DEPLOY_PATH,CONTAINER_UID,CONTAINER_GID,TRAEFIK_IDENTIFIER,APP_ENV,APP_SECRET
+          envs: SITE_URL,DEPLOY_PATH,CONTAINER_UID,CONTAINER_GID,TRAEFIK_IDENTIFIER,APP_ENV,APP_SECRET,API_SECRET,ENCRYPTION_SECRET,ENCRYPTION_TIMESTAMP_INTERVAL
           script: |
             cd $DEPLOY_PATH
             export SITE_URL=$SITE_URL
@@ -144,6 +150,9 @@ jobs:
             export TRAEFIK_IDENTIFIER=$TRAEFIK_IDENTIFIER
             export APP_ENV=$APP_ENV
             export APP_SECRET=$APP_SECRET
+            export API_SECRET=$API_SECRET
+            export ENCRYPTION_SECRET=$ENCRYPTION_SECRET
+            export ENCRYPTION_TIMESTAMP_INTERVAL=$ENCRYPTION_TIMESTAMP_INTERVAL
             chmod +x $DEPLOY_PATH/deploy.sh
             $DEPLOY_PATH/deploy.sh
 
