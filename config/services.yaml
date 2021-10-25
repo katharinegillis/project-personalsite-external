@@ -31,9 +31,6 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    App\Common\ArrayCollection\ArrayCollectionFactoryInterface:
-        class: App\Common\ArrayCollection\Doctrine2\Doctrine2ArrayCollectionFactory
-
     App\Common\ApiSecret\Symfony\CheckApiSecretHeaderSubscriber:
         arguments:
             $apiSecret: '%api_secret%'
