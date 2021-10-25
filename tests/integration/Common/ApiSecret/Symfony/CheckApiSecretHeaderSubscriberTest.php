@@ -4,16 +4,18 @@ namespace App\Tests\integration\Common\ApiSecret\Symfony;
 use App\Common\Encryption\Service\EncryptionService;
 use App\Tests\_support\Helper\DependencyTrait\CreateControllerEventTrait;
 use App\Tests\IntegrationTester;
+use Codeception\Test\Unit;
 use Exception;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class CheckApiSecretHeaderSubscriberTest extends \Codeception\Test\Unit
+final class CheckApiSecretHeaderSubscriberTest extends Unit
 {
     use CreateControllerEventTrait;
 
     protected IntegrationTester $tester;
+
     private string $receivedSecret;
     private string $receivedHmac = '';
 

@@ -11,7 +11,7 @@ use Exception;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class CheckApiSecretHeaderSubscriberTest extends Unit
+final class CheckApiSecretHeaderSubscriberTest extends Unit
 {
     use CreateControllerEventTrait;
 

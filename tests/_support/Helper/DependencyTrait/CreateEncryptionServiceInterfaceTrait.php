@@ -2,27 +2,28 @@
 
 namespace App\Tests\_support\Helper\DependencyTrait;
 
-use App\Common\Encryption\Service\EncryptionService;
+use App\Common\Encryption\Service\EncryptionServiceInterface;
 use Closure;
 use Codeception\Stub;
 use DateTime;
 use DateTimeZone;
+use Exception;
 use JetBrains\PhpStorm\ArrayShape;
 
-trait CreateEncryptionServiceTrait
+trait CreateEncryptionServiceInterfaceTrait
 {
     /**
      * @param array|null $encryptionServiceParams
-     * @return EncryptionService
-     * @throws \Exception
+     * @return EncryptionServiceInterface
+     * @throws Exception
      */
-    public function createEncryptionService(?array $encryptionServiceParams = null): EncryptionService
+    public function createEncryptionServiceInterface(?array $encryptionServiceParams = null): EncryptionServiceInterface
     {
         if (null === $encryptionServiceParams) {
             $encryptionServiceParams = $this->getDefaultEncryptionServiceParams();
         }
 
-        return Stub::makeEmpty(EncryptionService::class, $encryptionServiceParams);
+        return Stub::makeEmpty(EncryptionServiceInterface::class, $encryptionServiceParams);
     }
 
     /**

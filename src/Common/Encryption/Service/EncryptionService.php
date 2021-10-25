@@ -6,14 +6,10 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 
-class EncryptionService
+final class EncryptionService implements EncryptionServiceInterface
 {
     /**
-     * @param string $message
-     * @param string $method
-     * @param string $secret
-     * @param string|null $hmac
-     * @return string
+     * @inheritDoc
      */
     public function encrypt(string $message, string $method, string $secret, ?string &$hmac): string
     {
@@ -24,11 +20,7 @@ class EncryptionService
     }
 
     /**
-     * @param string $encrypted
-     * @param string $method
-     * @param string $secret
-     * @param string $hmac
-     * @return string|bool
+     * @inheritDoc
      */
     public function decrypt(string $encrypted, string $method, string $secret, string $hmac): string|bool
     {
@@ -41,12 +33,7 @@ class EncryptionService
     }
 
     /**
-     * @param string $message
-     * @param string $method
-     * @param string $secret
-     * @param string|null $hmac
-     * @return string
-     * @throws Exception
+     * @inheritDoc
      */
     public function encryptWithTSValidation(string $message, string $method, string $secret, ?string &$hmac): string
     {
@@ -56,13 +43,7 @@ class EncryptionService
     }
 
     /**
-     * @param string $encrypted
-     * @param string $method
-     * @param string $secret
-     * @param string $hmac
-     * @param int $intervalThreshold
-     * @return string|bool
-     * @throws Exception
+     * @inheritDoc
      */
     public function decryptWithTSValidation(string $encrypted, string $method, string $secret, string $hmac, int $intervalThreshold): string|bool
     {

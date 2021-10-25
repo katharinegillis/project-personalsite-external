@@ -4,14 +4,14 @@ namespace App\Common\ApiSecret\Query;
 
 use App\Common\CQRS\Query\QueryInterface;
 
-class CheckSecretMatchesQuery implements QueryInterface
+final class CheckSecretMatchesQuery implements QueryInterface
 {
-    protected string $encryptedSecret;
-    protected string $method;
-    protected string $decryptionSecret;
-    protected string $hmac;
-    protected int $timestampIntervalThreshold;
-    protected string $secretToMatch;
+    private string $encryptedSecret;
+    private string $method;
+    private string $decryptionSecret;
+    private string $hmac;
+    private int $timestampIntervalThreshold;
+    private string $secretToMatch;
 
     /**
      * @param string $encryptedSecret
