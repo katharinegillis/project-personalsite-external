@@ -11,7 +11,7 @@ class EncryptionServiceTest extends Unit
     /**
      * @test
      */
-    public function I_can_encrypt_a_string_and_the_result_isnt_the_same_as_the_original_string()
+    public function I_can_encrypt_a_string_and_the_result_is_not_the_same_as_the_original_string()
     {
         $message = 'My super secret information.';
         $method = 'AES-256-CBC';
@@ -66,6 +66,7 @@ class EncryptionServiceTest extends Unit
 
     /**
      * @test
+     * @throws Exception
      */
     public function I_can_encrypt_a_string_with_a_timestamp()
     {
