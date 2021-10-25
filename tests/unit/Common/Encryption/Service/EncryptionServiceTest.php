@@ -6,7 +6,7 @@ use App\Common\Encryption\Service\EncryptionService;
 use Codeception\Test\Unit;
 use Exception;
 
-class EncryptionServiceTest extends Unit
+final class EncryptionServiceTest extends Unit
 {
     /**
      * @test

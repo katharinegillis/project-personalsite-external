@@ -5,7 +5,7 @@ namespace App\Tests\unit\Common\ApiSecret\Query;
 use App\Common\ApiSecret\Query\CheckSecretMatchesQuery;
 use Codeception\Test\Unit;
 
-class CheckSecretMatchesQueryTest extends Unit
+final class CheckSecretMatchesQueryTest extends Unit
 {
     /**
      * @test

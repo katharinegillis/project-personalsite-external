@@ -4,16 +4,16 @@ namespace App\Tests\unit\Common\ApiSecret\Query;
 
 use App\Common\ApiSecret\Query\CheckSecretMatchesQuery;
 use App\Common\ApiSecret\Query\CheckSecretMatchesQueryHandler;
-use App\Tests\_support\Helper\DependencyTrait\CreateEncryptionServiceTrait;
+use App\Tests\_support\Helper\DependencyTrait\CreateEncryptionServiceInterfaceTrait;
 use Codeception\Test\Unit;
 use DateTime;
 use DateTimeZone;
 use Exception;
 use JetBrains\PhpStorm\ArrayShape;
 
-class CheckSecretMatchesQueryHandlerTest extends Unit
+final class CheckSecretMatchesQueryHandlerTest extends Unit
 {
-    use CreateEncryptionServiceTrait;
+    use CreateEncryptionServiceInterfaceTrait;
 
     protected function createEncryptedString(string $message, string $method, string $secret, DateTime $timestamp): string
     {
@@ -61,7 +61,7 @@ class CheckSecretMatchesQueryHandlerTest extends Unit
 
         $checkSecretMatchesQuery = new CheckSecretMatchesQuery($encryptedSecret, $secret, $method, $decryptionSecret, $hmac, 60);
 
-        $checkSecretMatchesQueryHandler = new CheckSecretMatchesQueryHandler($this->createEncryptionService());
+        $checkSecretMatchesQueryHandler = new CheckSecretMatchesQueryHandler($this->createEncryptionServiceInterface());
 
         $secretMatches = $checkSecretMatchesQueryHandler->__invoke($checkSecretMatchesQuery);
 
@@ -88,7 +88,7 @@ class CheckSecretMatchesQueryHandlerTest extends Unit
 
         $checkSecretMatchesQuery = new CheckSecretMatchesQuery($encryptedSecret, $secret, $method, $decryptionSecret, $hmac, 60);
 
-        $checkSecretMatchesQueryHandler = new CheckSecretMatchesQueryHandler($this->createEncryptionService());
+        $checkSecretMatchesQueryHandler = new CheckSecretMatchesQueryHandler($this->createEncryptionServiceInterface());
 
         $secretMatches = $checkSecretMatchesQueryHandler->__invoke($checkSecretMatchesQuery);
 
@@ -114,7 +114,7 @@ class CheckSecretMatchesQueryHandlerTest extends Unit
 
         $checkSecretMatchesQuery = new CheckSecretMatchesQuery($encryptedSecret, $secret, $method, $decryptionSecret, $wrongHmac, 60);
 
-        $checkSecretMatchesQueryHandler = new CheckSecretMatchesQueryHandler($this->createEncryptionService());
+        $checkSecretMatchesQueryHandler = new CheckSecretMatchesQueryHandler($this->createEncryptionServiceInterface());
 
         $secretMatches = $checkSecretMatchesQueryHandler->__invoke($checkSecretMatchesQuery);
 
@@ -142,7 +142,7 @@ class CheckSecretMatchesQueryHandlerTest extends Unit
 
         sleep(2);
 
-        $checkSecretMatchesQueryHandler = new CheckSecretMatchesQueryHandler($this->createEncryptionService());
+        $checkSecretMatchesQueryHandler = new CheckSecretMatchesQueryHandler($this->createEncryptionServiceInterface());
 
         $secretMatches = $checkSecretMatchesQueryHandler->__invoke($checkSecretMatchesQuery);
 

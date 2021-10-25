@@ -3,17 +3,17 @@
 namespace App\Common\ApiSecret\Query;
 
 use App\Common\CQRS\Query\QueryHandlerInterface;
-use App\Common\Encryption\Service\EncryptionService;
+use App\Common\Encryption\Service\EncryptionServiceInterface;
 use Exception;
 
-class CheckSecretMatchesQueryHandler implements QueryHandlerInterface
+final class CheckSecretMatchesQueryHandler implements QueryHandlerInterface
 {
-    protected EncryptionService $encryptionService;
+    private EncryptionServiceInterface $encryptionService;
 
     /**
-     * @param EncryptionService $encryptionService
+     * @param EncryptionServiceInterface $encryptionService
      */
-    public function __construct(EncryptionService $encryptionService)
+    public function __construct(EncryptionServiceInterface $encryptionService)
     {
 
         $this->encryptionService = $encryptionService;
