@@ -13,8 +13,3 @@ services:
     restart: always
     networks:
       - default
-      - db
-
-networks:
-  db:
-    external: true

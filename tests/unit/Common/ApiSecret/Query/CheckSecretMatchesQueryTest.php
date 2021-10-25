@@ -12,6 +12,7 @@ class CheckSecretMatchesQueryTest extends Unit
      */
     public function I_can_create_a_CheckSecretMatchesQuery_with_the_given_data()
     {
+        /** @noinspection SpellCheckingInspection */
         $encryptedSecret = 'ZWJmOTE5YzRmMDI5ZmU3YQ==NHu9dWmq0N2Hcqvfq/qTedSINXyJ1YxKubh1QJ30/Fg=';
         $method = 'AES-256-CBC';
         $decryptionSecret = 'My32charPasswordAndInitVectorStr';
