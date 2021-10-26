@@ -66,6 +66,7 @@ final class EncryptionServiceTest extends Unit
 
     /**
      * @test
+     *
      * @throws Exception
      */
     public function I_can_encrypt_a_string_with_a_timestamp()
@@ -87,6 +88,7 @@ final class EncryptionServiceTest extends Unit
 
     /**
      * @test
+     *
      * @throws Exception
      */
     public function I_can_encrypt_and_decrypt_a_string_with_a_timestamp()
@@ -106,6 +108,7 @@ final class EncryptionServiceTest extends Unit
 
     /**
      * @test
+     *
      * @throws Exception
      */
     public function I_cannot_decrypt_a_string_with_a_timestamp_using_the_wrong_hmac()
@@ -125,6 +128,7 @@ final class EncryptionServiceTest extends Unit
 
     /**
      * @test
+     *
      * @throws Exception
      */
     public function I_cannot_decrypt_a_string_with_a_timestamp_if_I_am_outside_the_timestamp_threshold()

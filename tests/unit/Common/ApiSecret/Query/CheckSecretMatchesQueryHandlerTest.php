@@ -15,35 +15,9 @@ final class CheckSecretMatchesQueryHandlerTest extends Unit
 {
     use CreateEncryptionServiceInterfaceTrait;
 
-    protected function createEncryptedString(string $message, string $method, string $secret, DateTime $timestamp): string
-    {
-        return $message . '|' . $method . '|' . $secret . '|' . substr($timestamp->format('c'),0,19);
-    }
-
-    /**
-     * @throws Exception
-     */
-    #[ArrayShape([
-        'secret' => "string",
-        'method' => "string",
-        'decryptionSecret' => "string",
-        'hmac' => "string",
-        'wrongSecret' => "string",
-        'wrongHmac' => "string"
-    ])] protected function getSecretData(): array
-    {
-        return [
-            'secret' => 'I am a secret!',
-            'method' => 'some-method',
-            'decryptionSecret' => '12345678901234567890123456789012',
-            'hmac' => 'blah',
-            'wrongSecret' => 'I am a secret and I don\'t match!',
-            'wrongHmac' => 'blah-blah',
-        ];
-    }
-
     /**
      * @test
+     *
      * @throws Exception
      */
     public function I_can_check_that_a_secret_matches()
@@ -70,6 +44,7 @@ final class CheckSecretMatchesQueryHandlerTest extends Unit
 
     /**
      * @test
+     *
      * @throws Exception
      */
     public function I_can_check_that_a_secret_doesnt_match()
@@ -97,6 +72,7 @@ final class CheckSecretMatchesQueryHandlerTest extends Unit
 
     /**
      * @test
+     *
      * @throws Exception
      */
     public function I_can_check_that_a_secret_doesnt_match_because_the_hmac_is_wrong()
@@ -110,7 +86,7 @@ final class CheckSecretMatchesQueryHandlerTest extends Unit
 
         $timestamp = new DateTime(timezone: new DateTimeZone('UTC'));
 
-        $encryptedSecret = $secret . '|' . $method . '|' . $decryptionSecret . '|' . substr($timestamp->format('c'),0,19);
+        $encryptedSecret = $secret.'|'.$method.'|'.$decryptionSecret.'|'.substr($timestamp->format('c'), 0, 19);
 
         $checkSecretMatchesQuery = new CheckSecretMatchesQuery($encryptedSecret, $secret, $method, $decryptionSecret, $wrongHmac, 60);
 
@@ -123,6 +99,7 @@ final class CheckSecretMatchesQueryHandlerTest extends Unit
 
     /**
      * @test
+     *
      * @throws Exception
      */
     public function I_can_check_that_a_secret_doesnt_match_because_the_timestamp_is_outside_the_interval()
@@ -147,5 +124,40 @@ final class CheckSecretMatchesQueryHandlerTest extends Unit
         $secretMatches = $checkSecretMatchesQueryHandler->__invoke($checkSecretMatchesQuery);
 
         expect($secretMatches)->toBeFalse();
+    }
+
+    /**
+     * @param string   $message
+     * @param string   $method
+     * @param string   $secret
+     * @param DateTime $timestamp
+     *
+     * @return string
+     */
+    protected function createEncryptedString(string $message, string $method, string $secret, DateTime $timestamp): string
+    {
+        return $message.'|'.$method.'|'.$secret.'|'.substr($timestamp->format('c'), 0, 19);
+    }
+
+    /**
+     * @return array
+     */
+    #[ArrayShape([
+        'secret' => "string",
+        'method' => "string",
+        'decryptionSecret' => "string",
+        'hmac' => "string",
+        'wrongSecret' => "string",
+        'wrongHmac' => "string",
+    ])] protected function getSecretData(): array
+    {
+        return [
+            'secret' => 'I am a secret!',
+            'method' => 'some-method',
+            'decryptionSecret' => '12345678901234567890123456789012',
+            'hmac' => 'blah',
+            'wrongSecret' => 'I am a secret and I don\'t match!',
+            'wrongHmac' => 'blah-blah',
+        ];
     }
 }

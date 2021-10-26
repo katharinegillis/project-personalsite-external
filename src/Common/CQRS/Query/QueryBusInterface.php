@@ -6,6 +6,7 @@ interface QueryBusInterface
 {
     /**
      * @param QueryInterface $message
+     *
      * @return mixed
      */
     public function handle(QueryInterface $message): mixed;
