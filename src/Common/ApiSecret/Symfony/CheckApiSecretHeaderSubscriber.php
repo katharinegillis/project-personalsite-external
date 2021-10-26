@@ -19,11 +19,11 @@ final class CheckApiSecretHeaderSubscriber implements EventSubscriberInterface
     private QueryBusInterface $queryBus;
 
     /**
+     * @param string            $apiSecret
+     * @param string            $encryptionSecret
+     * @param string            $encryptionMethod
+     * @param int               $encryptionTimestampInterval
      * @param QueryBusInterface $queryBus
-     * @param string $apiSecret
-     * @param string $encryptionSecret
-     * @param string $encryptionMethod
-     * @param int $encryptionTimestampInterval
      */
     public function __construct(string $apiSecret, string $encryptionSecret, string $encryptionMethod, int $encryptionTimestampInterval, QueryBusInterface $queryBus)
     {
@@ -38,7 +38,7 @@ final class CheckApiSecretHeaderSubscriber implements EventSubscriberInterface
      * @inheritDoc
      */
     #[ArrayShape([
-        KernelEvents::CONTROLLER => "string"
+        KernelEvents::CONTROLLER => "string",
     ])] public static function getSubscribedEvents(): array
     {
         return [
@@ -62,6 +62,7 @@ final class CheckApiSecretHeaderSubscriber implements EventSubscriberInterface
     /**
      * @param string $encryptedSecret
      * @param string $hmac
+     *
      * @return bool
      */
     private function checkSecretMatches(string $encryptedSecret, string $hmac): bool

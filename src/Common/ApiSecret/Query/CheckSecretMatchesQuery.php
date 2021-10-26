@@ -15,11 +15,11 @@ final class CheckSecretMatchesQuery implements QueryInterface
 
     /**
      * @param string $encryptedSecret
+     * @param string $secretToMatch
      * @param string $method
      * @param string $decryptionSecret
      * @param string $hmac
-     * @param int $timestampIntervalThreshold
-     * @param string $secretToMatch
+     * @param int    $timestampIntervalThreshold
      */
     public function __construct(string $encryptedSecret, string $secretToMatch, string $method, string $decryptionSecret, string $hmac, int $timestampIntervalThreshold)
     {

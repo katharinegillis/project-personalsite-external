@@ -15,11 +15,14 @@ final class CheckSecretMatchesQueryHandler implements QueryHandlerInterface
      */
     public function __construct(EncryptionServiceInterface $encryptionService)
     {
-
         $this->encryptionService = $encryptionService;
     }
 
     /**
+     * @param CheckSecretMatchesQuery $query
+     *
+     * @return bool
+     *
      * @throws Exception
      */
     public function __invoke(CheckSecretMatchesQuery $query): bool
