@@ -10,7 +10,7 @@ final class EncryptionService implements EncryptionServiceInterface
     /**
      * @inheritDoc
      */
-    public function encrypt(string $message, string $method, string $secret, ?string &$hmac): string
+    public function encrypt(string $message, string $method, string $secret, string|null &$hmac): string
     {
         $iv = substr(bin2hex(openssl_random_pseudo_bytes(16)), 0, 16);
         $encrypted = base64_encode($iv).openssl_encrypt($message, $method, $secret, 0, $iv);
@@ -36,7 +36,7 @@ final class EncryptionService implements EncryptionServiceInterface
     /**
      * @inheritDoc
      */
-    public function encryptWithTSValidation(string $message, string $method, string $secret, ?string &$hmac): string
+    public function encryptWithTSValidation(string $message, string $method, string $secret, string|null &$hmac): string
     {
         $now = new DateTime(timezone: new DateTimeZone('UTC'));
         $message = substr($now->format('c'), 0, 19)."$message";

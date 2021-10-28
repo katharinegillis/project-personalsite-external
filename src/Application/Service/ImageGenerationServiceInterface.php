@@ -2,12 +2,14 @@
 
 namespace App\Application\Service;
 
+use App\Domain\Entity\Image\ImageInterface;
+
 interface ImageGenerationServiceInterface
 {
     /**
      * @param string $identifier
      *
-     * @return string|null
+     * @return ImageInterface
      */
-    public function generateImage(string $identifier): ?string;
+    public function generateImage(string $identifier): ImageInterface;
 }
