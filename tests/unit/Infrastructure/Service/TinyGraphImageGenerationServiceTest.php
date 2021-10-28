@@ -1,17 +1,20 @@
 <?php
 namespace App\Tests\unit\Infrastructure\Service;
 
+use App\Domain\Factory\ImageFactory;
 use App\Infrastructure\Service\TinyGraphImageGenerationService;
+use App\Tests\_support\Helper\AssertionTrait\CheckImageTrait;
 use Codeception\Test\Unit;
 use Codeception\Util\Stub;
 use Exception;
 use Symfony\Component\HttpClient\Exception\ServerException;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class TinyGraphImageGenerationServiceTest extends Unit
 {
+    use CheckImageTrait;
+
     /**
      * @test
      *
@@ -19,14 +22,16 @@ class TinyGraphImageGenerationServiceTest extends Unit
      */
     public function I_can_generate_an_image_based_on_an_identifier()
     {
-        $identifier = 'Personal Site - Externals';
-        $expectedImage = $identifier.'image';
+        list(
+            'data' => $data,
+            'identifier' => $identifier,
+            ) = $this->getTestImageData();
 
         $httpClient = Stub::makeEmpty(HttpClientInterface::class, [
-            'request' => function (string $method, string $url) use ($identifier, $expectedImage) {
+            'request' => function (string $method, string $url) use ($identifier, $data) {
                 if ('GET' === $method && 'https://tinygraphs.com/isogrids/'.urlencode($identifier).'?theme=heatwave&numcolors=3&size=220&fmt=svg' === $url) {
                     return Stub::makeEmpty(ResponseInterface::class, [
-                        'getContent' => $expectedImage,
+                        'getContent' => $data,
                     ]);
                 }
 
@@ -34,11 +39,11 @@ class TinyGraphImageGenerationServiceTest extends Unit
             },
         ]);
 
-        $tinyGraphImageGenerationService = new TinyGraphImageGenerationService($httpClient);
+        $tinyGraphImageGenerationService = new TinyGraphImageGenerationService($httpClient, new ImageFactory());
 
         $image = $tinyGraphImageGenerationService->generateImage($identifier);
 
-        expect($image)->toBe($expectedImage);
+        $this->checkImage($image, $data, null, $identifier);
     }
 
     /**
@@ -46,9 +51,11 @@ class TinyGraphImageGenerationServiceTest extends Unit
      *
      * @throws Exception
      */
-    public function I_get_null_if_tiny_graph_gives_a_service_unavailable_response()
+    public function I_get_a_null_image_if_tiny_graph_gives_a_service_unavailable_response()
     {
-        $identifier = 'Personal Site - Externals';
+        list(
+            'identifier' => $identifier,
+            ) = $this->getTestImageData();
 
         $httpClient = Stub::makeEmpty(HttpClientInterface::class, [
             'request' => function (string $method, string $url) use ($identifier) {
@@ -72,10 +79,10 @@ class TinyGraphImageGenerationServiceTest extends Unit
             },
         ]);
 
-        $tinyGraphImageGenerationService = new TinyGraphImageGenerationService($httpClient);
+        $tinyGraphImageGenerationService = new TinyGraphImageGenerationService($httpClient, new ImageFactory());
 
         $image = $tinyGraphImageGenerationService->generateImage($identifier);
 
-        expect($image)->toBeNull();
+        $this->checkNullImage($image);
     }
 }
