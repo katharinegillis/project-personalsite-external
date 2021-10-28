@@ -14,7 +14,7 @@ interface EncryptionServiceInterface
      *
      * @return string
      */
-    public function encrypt(string $message, string $method, string $secret, ?string &$hmac): string;
+    public function encrypt(string $message, string $method, string $secret, string|null &$hmac): string;
 
     /**
      * @param string $encrypted
@@ -36,7 +36,7 @@ interface EncryptionServiceInterface
      *
      * @throws Exception
      */
-    public function encryptWithTSValidation(string $message, string $method, string $secret, ?string &$hmac): string;
+    public function encryptWithTSValidation(string $message, string $method, string $secret, string|null &$hmac): string;
 
     /**
      * @param string $encrypted
