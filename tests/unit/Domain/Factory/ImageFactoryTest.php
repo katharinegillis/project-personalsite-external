@@ -16,15 +16,16 @@ class ImageFactoryTest extends Unit
     {
         list(
             'data' => $data,
-            'path' => $path,
+            'fileName' => $fileName,
             'identifier' => $identifier,
+            'extension' => $extension,
             ) = $this->getTestImageData();
 
         $imageFactory = new ImageFactory();
 
-        $image = $imageFactory->createImage($data, $path, $identifier);
+        $image = $imageFactory->createImage($identifier, $extension, $data);
 
-        $this->checkImage($image, $data, $path, $identifier);
+        $this->checkImage($image, $identifier, $extension, $fileName, $data);
     }
 
     /**
@@ -32,11 +33,17 @@ class ImageFactoryTest extends Unit
      */
     public function I_can_create_an_image_with_no_data()
     {
+        list(
+            'fileName' => $fileName,
+            'identifier' => $identifier,
+            'extension' => $extension,
+            ) = $this->getTestImageData();
+
         $imageFactory = new ImageFactory();
 
-        $image = $imageFactory->createImage();
+        $image = $imageFactory->createImage($identifier, $extension);
 
-        $this->checkImage($image, null, null, null);
+        $this->checkImage($image, $identifier, $extension, $fileName, null);
     }
 
     /**

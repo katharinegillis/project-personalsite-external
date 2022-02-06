@@ -22,22 +22,6 @@ class NullImageTest extends Unit
     /**
      * @test
      */
-    public function I_cannot_create_a_null_image_with_the_given_data()
-    {
-        list(
-            'data' => $data,
-            'path' => $path,
-            'identifier' => $identifier,
-            ) = $this->getTestImageData();
-
-        $image = new NullImage($data, $path, $identifier);
-
-        $this->checkNullImage($image);
-    }
-
-    /**
-     * @test
-     */
     public function I_cannot_set_the_data_property_for_a_null_image()
     {
         list(
@@ -56,24 +40,6 @@ class NullImageTest extends Unit
     /**
      * @test
      */
-    public function I_cannot_set_the_path_property_for_a_null_image()
-    {
-        list(
-            'path' => $path,
-            ) = $this->getTestImageData();
-
-        $image = new NullImage();
-
-        expect($image->getPath())->toBeNull();
-
-        $image->setPath($path);
-
-        expect($image->getPath())->toBeNull();
-    }
-
-    /**
-     * @test
-     */
     public function I_cannot_set_the_identifier_property_for_a_null_image()
     {
         list(
@@ -82,10 +48,28 @@ class NullImageTest extends Unit
 
         $image = new NullImage();
 
-        expect($image->getIdentifier())->toBeNull();
+        expect($image->getIdentifier())->toBe('');
 
         $image->setIdentifier($identifier);
 
-        expect($image->getIdentifier())->toBeNull();
+        expect($image->getIdentifier())->toBe('');
+    }
+
+    /**
+     * @test
+     */
+    public function I_cannot_set_the_extension_property_for_a_null_image()
+    {
+        list(
+            'extension' => $extension,
+            ) = $this->getTestImageData();
+
+        $image = new NullImage();
+
+        expect($image->getExtension())->toBe('');
+
+        $image->setExtension($extension);
+
+        expect($image->getExtension())->toBe('');
     }
 }

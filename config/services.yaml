@@ -9,6 +9,7 @@ parameters:
     encryption_method_default: 'AES-256-CBC'
     encryption_secret: '%env(ENCRYPTION_SECRET)%'
     encryption_timestamp_interval: '%env(int:ENCRYPTION_TIMESTAMP_INTERVAL)%'
+    image_dir: '%kernel.project_dir%/public/images'
 
 services:
     # default configuration for services in *this* file
@@ -40,6 +41,9 @@ services:
             $encryptionMethod: '%encryption_method%'
             $encryptionSecret: '%encryption_secret%'
             $encryptionTimestampInterval: '%encryption_timestamp_interval%'
+    App\Persistence\Service\FileSystemImageStorageService:
+        arguments:
+            $imageDir: '%image_dir%'
 
 when@test:
     services:

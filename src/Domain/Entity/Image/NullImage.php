@@ -11,7 +11,7 @@ class NullImage extends AbstractImage
      */
     #[Pure] public function __construct()
     {
-        parent::__construct();
+        parent::__construct('', '');
     }
 
     /**
@@ -34,6 +34,14 @@ class NullImage extends AbstractImage
     public function setIdentifier(string|null $identifier): void
     {
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setExtension(?string $extension): void
+    {
+    }
+
 
     /**
      * @inheritDoc

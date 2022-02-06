@@ -36,7 +36,7 @@ class TinyGraphImageGenerationService implements ImageGenerationServiceInterface
         try {
             $response = $this->httpClient->request('GET', $tinyGraphImageUrl);
 
-            return $this->imageFactory->createImage(data: $response->getContent(), identifier: $identifier);
+            return $this->imageFactory->createImage(data: $response->getContent(), identifier: $identifier, extension: 'svg');
         } catch (TransportExceptionInterface | ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface) {
             return $this->imageFactory->createNullImage();
         }

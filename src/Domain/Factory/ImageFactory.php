@@ -9,15 +9,15 @@ use JetBrains\PhpStorm\Pure;
 class ImageFactory
 {
     /**
+     * @param string      $identifier
+     * @param string      $extension
      * @param string|null $data
-     * @param string|null $path
-     * @param string|null $identifier
      *
      * @return Image
      */
-    #[Pure] public function createImage(string|null $data = null, string|null $path = null, string|null $identifier = null): Image
+    #[Pure] public function createImage(string $identifier, string $extension, string $data = null): Image
     {
-        return new Image($data, $path, $identifier);
+        return new Image($identifier, $extension, $data);
     }
 
     /**

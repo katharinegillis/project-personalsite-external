@@ -4,7 +4,6 @@ namespace App\Tests\unit\Domain\Entity\Image;
 use App\Domain\Entity\Image\Image;
 use App\Tests\_support\Helper\AssertionTrait\CheckImageTrait;
 use Codeception\Test\Unit;
-use JetBrains\PhpStorm\ArrayShape;
 
 class ImageTest extends Unit
 {
@@ -17,23 +16,34 @@ class ImageTest extends Unit
     {
         list(
             'data' => $data,
-            'path' => $path,
-            'identifier' => $identifier
+            'identifier' => $identifier,
+            'extension' => $extension,
             ) = $this->getTestImageData();
 
-        $image = new Image($data, $path, $identifier);
+        $generatedFileName = md5($identifier).'.'.$extension;
 
-        $this->checkImage($image, $data, $path, $identifier);
+        $image = new Image($identifier, $extension, $data);
+
+        $this->checkImage($image, $identifier, $extension, $generatedFileName, $data);
     }
 
     /**
      * @test
+     *
+     * @return void
      */
     public function I_can_create_an_image_with_no_data()
     {
-        $image = new Image();
+        list(
+            'identifier' => $identifier,
+            'extension' => $extension,
+            ) = $this->getTestImageData();
 
-        $this->checkImage($image, null, null, null);
+        $generatedFileName = md5($identifier).'.'.$extension;
+
+        $image = new Image($identifier, $extension);
+
+        $this->checkImage($image, $identifier, $extension, $generatedFileName, null);
     }
 
     /**
@@ -42,10 +52,12 @@ class ImageTest extends Unit
     public function I_can_set_the_data_property_for_an_image()
     {
         list(
-            'data' => $data
+            'data' => $data,
+            'identifier' => $identifier,
+            'extension' => $extension,
             ) = $this->getTestImageData();
 
-        $image = new Image();
+        $image = new Image($identifier, $extension);
 
         expect($image->getData())->toBeNull();
 
@@ -57,36 +69,42 @@ class ImageTest extends Unit
     /**
      * @test
      */
-    public function I_can_set_the_path_property_for_an_image()
+    public function I_can_set_the_identifier_property_for_an_image()
     {
         list(
-            'path' => $path
+            'identifier' => $identifier,
+            'extension' => $extension,
             ) = $this->getTestImageData();
 
-        $image = new Image();
+        $image = new Image($identifier, $extension);
 
-        expect($image->getPath())->toBeNull();
+        expect($image->getIdentifier())->toBe($identifier);
 
-        $image->setPath($path);
+        $newIdentifier = $identifier.$identifier;
 
-        expect($image->getPath())->toBe($path);
+        $image->setIdentifier($newIdentifier);
+
+        expect($image->getIdentifier())->toBe($newIdentifier);
     }
 
     /**
      * @test
      */
-    public function I_can_set_the_identifier_property_for_an_image()
+    public function I_can_set_the_extension_property_for_an_image()
     {
         list(
-            'identifier' => $identifier
+            'identifier' => $identifier,
+            'extension' => $extension,
             ) = $this->getTestImageData();
 
-        $image = new Image();
+        $image = new Image($identifier, $extension);
 
-        expect($image->getIdentifier())->tobeNull();
+        expect($image->getExtension())->toBe($extension);
 
-        $image->setIdentifier($identifier);
+        $newExtension = $extension.$extension;
 
-        expect($image->getIdentifier())->toBe($identifier);
+        $image->setExtension($newExtension);
+
+        expect($image->getExtension())->toBe($newExtension);
     }
 }

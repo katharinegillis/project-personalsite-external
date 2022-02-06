@@ -15,24 +15,29 @@ interface ImageInterface
     public function setData(string|null $data): void;
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getPath(): string|null;
+    public function getFileName(): string;
 
     /**
-     * @param string|null $path
+     * @return string
      */
-    public function setPath(string|null $path): void;
+    public function getIdentifier(): string;
 
     /**
-     * @return string|null
+     * @param string $identifier
      */
-    public function getIdentifier(): string|null;
+    public function setIdentifier(string $identifier): void;
 
     /**
-     * @param string|null $identifier
+     * @return string
      */
-    public function setIdentifier(string|null $identifier): void;
+    public function getExtension(): string;
+
+    /**
+     * @param string $extension
+     */
+    public function setExtension(string $extension): void;
 
     /**
      * @return bool

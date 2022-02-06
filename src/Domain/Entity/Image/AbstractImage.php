@@ -3,25 +3,28 @@
 namespace App\Domain\Entity\Image;
 
 use App\Common\NullEntity\NullableTrait;
+use JetBrains\PhpStorm\Pure;
 
 abstract class AbstractImage implements ImageInterface
 {
     use NullableTrait;
 
     private string|null $data;
-    private string|null $path;
-    protected ?string $identifier;
+    private string $fileName;
+    private string $identifier;
+    private string $extension;
 
     /**
+     * @param string      $identifier
+     * @param string      $extension
      * @param string|null $data
-     * @param string|null $path
-     * @param string|null $identifier
      */
-    public function __construct(string|null $data = null, string|null $path = null, string|null $identifier = null)
+    #[Pure] public function __construct(string $identifier, string $extension, string $data = null)
     {
-        $this->data = $data;
-        $this->path = $path;
         $this->identifier = $identifier;
+        $this->extension = $extension;
+        $this->fileName = $this->createFileName();
+        $this->data = $data;
     }
 
     /**
@@ -43,23 +46,15 @@ abstract class AbstractImage implements ImageInterface
     /**
      * @inheritDoc
      */
-    public function getPath(): string|null
+    public function getFileName(): string
     {
-        return $this->path;
+        return $this->fileName;
     }
 
     /**
      * @inheritDoc
      */
-    public function setPath(string|null $path): void
-    {
-        $this->path = $path;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getIdentifier(): string|null
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }
@@ -67,8 +62,36 @@ abstract class AbstractImage implements ImageInterface
     /**
      * @inheritDoc
      */
-    public function setIdentifier(string|null $identifier): void
+    public function setIdentifier(string $identifier): void
     {
         $this->identifier = $identifier;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getExtension(): string
+    {
+        return $this->extension;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setExtension(string $extension): void
+    {
+        $this->extension = $extension;
+    }
+
+    /**
+     * @return string
+     */
+    #[Pure] private function createFileName(): string
+    {
+        if ($this->isNull()) {
+            return '';
+        }
+
+        return md5($this->identifier).'.'.$this->extension;
     }
 }

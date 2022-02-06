@@ -24,7 +24,9 @@ class TinyGraphImageGenerationServiceTest extends Unit
     {
         list(
             'data' => $data,
+            'fileName' => $fileName,
             'identifier' => $identifier,
+            'extension' => $extension,
             ) = $this->getTestImageData();
 
         $httpClient = Stub::makeEmpty(HttpClientInterface::class, [
@@ -43,7 +45,7 @@ class TinyGraphImageGenerationServiceTest extends Unit
 
         $image = $tinyGraphImageGenerationService->generateImage($identifier);
 
-        $this->checkImage($image, $data, null, $identifier);
+        $this->checkImage($image, $identifier, $extension, $fileName, $data);
     }
 
     /**

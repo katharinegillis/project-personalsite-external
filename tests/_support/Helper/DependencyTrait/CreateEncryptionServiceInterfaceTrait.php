@@ -14,10 +14,12 @@ trait CreateEncryptionServiceInterfaceTrait
 {
     /**
      * @param array|null $encryptionServiceParams
+     *
      * @return EncryptionServiceInterface
+     *
      * @throws Exception
      */
-    public function createEncryptionServiceInterface(?array $encryptionServiceParams = null): EncryptionServiceInterface
+    public function createEncryptionServiceInterface(array|null $encryptionServiceParams = null): EncryptionServiceInterface
     {
         if (null === $encryptionServiceParams) {
             $encryptionServiceParams = $this->getDefaultEncryptionServiceParams();
@@ -33,13 +35,14 @@ trait CreateEncryptionServiceInterfaceTrait
         'encrypt' => "\Closure",
         'decrypt' => "\Closure",
         'encryptWithTSValidation' => "\Closure",
-        'decryptWithTSValidation' => "\Closure"
+        'decryptWithTSValidation' => "\Closure",
     ])] public function getDefaultEncryptionServiceParams(): array
     {
         return [
             'encrypt' => function (string $message, string $method, string $secret, ?string &$hmac) {
                 $hmac = 'blah';
-                return $message . '|' . $method . '|' . $secret;
+
+                return $message.'|'.$method.'|'.$secret;
             },
             'decrypt' => function (string $encryptedMessage, string $method, string $secret, string $hmac) {
                 if ('blah' !== $hmac) {
@@ -57,10 +60,10 @@ trait CreateEncryptionServiceInterfaceTrait
             'encryptWithTSValidation' => function (string $message, string $method, string $secret, ?string &$hmac) {
                 $hmac = 'blah';
                 $now = new DateTime(timezone: new DateTimeZone('UTC'));
-                return $message . '|' . $method . '|' . $secret . '|' . substr($now->format('c'),0,19);
+
+                return $message.'|'.$method.'|'.$secret.'|'.substr($now->format('c'), 0, 19);
             },
-            'decryptWithTSValidation' => function (string $encryptedMessage, string $method, string $secret, string $hmac, int $timestampIntervalThreshold)
-            {
+            'decryptWithTSValidation' => function (string $encryptedMessage, string $method, string $secret, string $hmac, int $timestampIntervalThreshold) {
                 if ('blah' !== $hmac) {
                     return false;
                 }
@@ -75,7 +78,7 @@ trait CreateEncryptionServiceInterfaceTrait
                 }
 
                 return $decryptedMessage;
-            }
+            },
         ];
     }
 }
